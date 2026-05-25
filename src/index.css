@@ -36,6 +36,7 @@
 html {
   scroll-behavior: smooth;
   background: var(--bg);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -74,6 +75,7 @@ a {
 img,
 svg {
   display: block;
+  max-width: 100%;
 }
 
 ::selection {
