@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowDown,
@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Code2,
   Download,
-  BriefcaseBusiness,
   GitBranch,
   Mail,
   MapPin,
@@ -20,7 +19,6 @@ import {
   caseStudies,
   focusAreas,
   metrics,
-  navItems,
   profile,
   projects,
   skills,
@@ -37,6 +35,287 @@ const fadeUp = {
 
 const caseStudyPathPattern = /^\/case-studies\/([^/]+)\/?$/
 
+type HeaderNavItem = {
+  label: string
+  href: string
+  external?: boolean
+}
+
+type HoverFrame = {
+  height: number
+  left: number
+  top: number
+  width: number
+}
+
+type AmbientNodes = {
+  filter: BiquadFilterNode
+  lfo: OscillatorNode
+  lfoGain: GainNode
+  masterGain: GainNode
+  oscillators: OscillatorNode[]
+  sourceGain: GainNode
+}
+
+type PortfolioAudio = {
+  isAudioEnabled: boolean
+  playHoverSound: () => void
+  toggleAudio: () => Promise<void>
+}
+
+const headerNavItems: HeaderNavItem[] = [
+  { label: 'CV', href: profile.links.cv, external: true },
+  { label: 'GitHub', href: profile.links.github, external: true },
+  { label: 'LinkedIn', href: profile.links.linkedin, external: true },
+  { label: 'Mail', href: profile.links.email },
+]
+
+const techMedallions = [
+  { label: 'React', mark: 'Rx' },
+  { label: 'TypeScript', mark: 'TS' },
+  { label: 'Python', mark: 'Py' },
+  { label: 'AWS', mark: 'AWS' },
+  { label: 'Database', mark: 'DB' },
+  { label: 'GitHub', mark: 'Git' },
+  { label: 'Security', mark: 'Sec' },
+  { label: 'AI', mark: 'AI' },
+]
+
+const audioWaveBars = Array.from({ length: 7 })
+const bootCrystalCells = Array.from({ length: 12 })
+const bootSignalBars = Array.from({ length: 4 })
+
+function createAudioContext() {
+  const audioWindow = window as Window &
+    typeof globalThis & {
+      webkitAudioContext?: typeof AudioContext
+    }
+  const AudioContextConstructor =
+    audioWindow.AudioContext ?? audioWindow.webkitAudioContext
+
+  return AudioContextConstructor ? new AudioContextConstructor() : null
+}
+
+function usePortfolioAudio(): PortfolioAudio {
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const ambientNodesRef = useRef<AmbientNodes | null>(null)
+  const audioEnabledRef = useRef(false)
+  const lastHoverSoundRef = useRef(0)
+
+  const getContext = useCallback(() => {
+    audioContextRef.current ??= createAudioContext()
+    return audioContextRef.current
+  }, [])
+
+  const stopAmbient = useCallback(() => {
+    const context = audioContextRef.current
+    const nodes = ambientNodesRef.current
+
+    if (!context || !nodes) {
+      return
+    }
+
+    const stopAt = context.currentTime + 0.35
+    nodes.masterGain.gain.cancelScheduledValues(context.currentTime)
+    nodes.masterGain.gain.setTargetAtTime(0.0001, context.currentTime, 0.08)
+
+    nodes.oscillators.forEach((oscillator) => {
+      try {
+        oscillator.stop(stopAt)
+      } catch {
+        // Audio nodes may already be stopped during hot reload or unmount.
+      }
+    })
+
+    try {
+      nodes.lfo.stop(stopAt)
+    } catch {
+      // Audio nodes may already be stopped during hot reload or unmount.
+    }
+
+    window.setTimeout(() => {
+      nodes.oscillators.forEach((oscillator) => {
+        try {
+          oscillator.disconnect()
+        } catch {
+          // Audio nodes may already be disconnected during hot reload or unmount.
+        }
+      })
+
+      try {
+        nodes.lfo.disconnect()
+        nodes.lfoGain.disconnect()
+        nodes.sourceGain.disconnect()
+        nodes.filter.disconnect()
+        nodes.masterGain.disconnect()
+      } catch {
+        // Audio nodes may already be disconnected during hot reload or unmount.
+      }
+    }, 380)
+
+    ambientNodesRef.current = null
+  }, [])
+
+  const startAmbient = useCallback((context: AudioContext) => {
+    if (ambientNodesRef.current) {
+      return
+    }
+
+    const masterGain = context.createGain()
+    const filter = context.createBiquadFilter()
+    const lfo = context.createOscillator()
+    const lfoGain = context.createGain()
+    const sourceGain = context.createGain()
+
+    masterGain.gain.setValueAtTime(0.0001, context.currentTime)
+    masterGain.gain.exponentialRampToValueAtTime(0.032, context.currentTime + 1.2)
+    filter.type = 'lowpass'
+    filter.frequency.setValueAtTime(640, context.currentTime)
+    filter.Q.setValueAtTime(8, context.currentTime)
+    lfo.frequency.setValueAtTime(0.07, context.currentTime)
+    lfoGain.gain.setValueAtTime(160, context.currentTime)
+    sourceGain.gain.setValueAtTime(0.22, context.currentTime)
+
+    lfo.connect(lfoGain)
+    lfoGain.connect(filter.frequency)
+    filter.connect(masterGain)
+    masterGain.connect(context.destination)
+
+    const oscillators = [48, 67, 95].map((frequency, index) => {
+      const oscillator = context.createOscillator()
+      oscillator.type = index === 1 ? 'triangle' : 'sine'
+      oscillator.frequency.setValueAtTime(frequency, context.currentTime)
+      oscillator.detune.setValueAtTime(index === 2 ? 7 : -5, context.currentTime)
+      oscillator.connect(sourceGain)
+      oscillator.start()
+      return oscillator
+    })
+
+    sourceGain.connect(filter)
+    lfo.start()
+    ambientNodesRef.current = {
+      filter,
+      lfo,
+      lfoGain,
+      masterGain,
+      oscillators,
+      sourceGain,
+    }
+  }, [])
+
+  const playTone = useCallback(
+    (kind: 'click' | 'hover') => {
+      if (!audioEnabledRef.current) {
+        return
+      }
+
+      const context = getContext()
+      if (!context) {
+        return
+      }
+
+      if (context.state === 'suspended') {
+        void context.resume()
+      }
+
+      const now = context.currentTime
+      const oscillator = context.createOscillator()
+      const gain = context.createGain()
+      const filter = context.createBiquadFilter()
+      const isClick = kind === 'click'
+      const duration = isClick ? 0.16 : 0.08
+      const startFrequency = isClick ? 210 : 620
+      const endFrequency = isClick ? 820 : 390
+
+      oscillator.type = isClick ? 'sawtooth' : 'triangle'
+      oscillator.frequency.setValueAtTime(startFrequency, now)
+      oscillator.frequency.exponentialRampToValueAtTime(endFrequency, now + duration)
+      filter.type = 'bandpass'
+      filter.frequency.setValueAtTime(isClick ? 880 : 620, now)
+      filter.Q.setValueAtTime(isClick ? 8 : 5, now)
+      gain.gain.setValueAtTime(isClick ? 0.028 : 0.012, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration)
+
+      oscillator.connect(filter)
+      filter.connect(gain)
+      gain.connect(context.destination)
+      oscillator.start(now)
+      oscillator.stop(now + duration + 0.03)
+      oscillator.addEventListener('ended', () => {
+        oscillator.disconnect()
+        filter.disconnect()
+        gain.disconnect()
+      })
+    },
+    [getContext],
+  )
+
+  const playHoverSound = useCallback(() => {
+    const now = window.performance.now()
+    if (now - lastHoverSoundRef.current < 130) {
+      return
+    }
+
+    lastHoverSoundRef.current = now
+    playTone('hover')
+  }, [playTone])
+
+  const toggleAudio = useCallback(async () => {
+    const context = getContext()
+    if (!context) {
+      return
+    }
+
+    if (isAudioEnabled) {
+      audioEnabledRef.current = false
+      stopAmbient()
+      setIsAudioEnabled(false)
+      return
+    }
+
+    await context.resume()
+    audioEnabledRef.current = true
+    startAmbient(context)
+    setIsAudioEnabled(true)
+
+    window.setTimeout(() => {
+      playTone('click')
+    }, 40)
+  }, [getContext, isAudioEnabled, playTone, startAmbient, stopAmbient])
+
+  useEffect(() => {
+    if (!isAudioEnabled) {
+      return undefined
+    }
+
+    audioEnabledRef.current = true
+
+    const playClick = (event: PointerEvent) => {
+      const target = event.target
+      if (target instanceof Element && target.closest('a, button')) {
+        playTone('click')
+      }
+    }
+
+    document.addEventListener('pointerdown', playClick)
+
+    return () => {
+      document.removeEventListener('pointerdown', playClick)
+    }
+  }, [isAudioEnabled, playTone])
+
+  useEffect(
+    () => () => {
+      stopAmbient()
+      void audioContextRef.current?.close()
+    },
+    [stopAmbient],
+  )
+
+  return { isAudioEnabled, playHoverSound, toggleAudio }
+}
+
 function getCaseStudySlug(pathname: string) {
   return pathname.match(caseStudyPathPattern)?.[1] ?? null
 }
@@ -44,8 +323,26 @@ function getCaseStudySlug(pathname: string) {
 function App() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [pathname, setPathname] = useState(() => window.location.pathname)
+  const [isBooting, setIsBooting] = useState(true)
+  const [shouldShowBoot, setShouldShowBoot] = useState(true)
+  const portfolioAudio = usePortfolioAudio()
   const caseStudySlug = getCaseStudySlug(pathname)
   const activeCaseStudy = caseStudies.find((study) => study.slug === caseStudySlug)
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const bootTimer = window.setTimeout(() => {
+      setIsBooting(false)
+    }, reduceMotion ? 160 : 1450)
+    const removeTimer = window.setTimeout(() => {
+      setShouldShowBoot(false)
+    }, reduceMotion ? 380 : 2250)
+
+    return () => {
+      window.clearTimeout(bootTimer)
+      window.clearTimeout(removeTimer)
+    }
+  }, [])
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -86,9 +383,14 @@ function App() {
   }, [caseStudySlug])
 
   return (
-    <div className="site-shell">
+    <div className={`site-shell ${isBooting ? 'is-booting' : 'is-ready'}`}>
+      {shouldShowBoot && <BootScreen isExiting={!isBooting} />}
       <Frame scrollProgress={scrollProgress} />
-      <Header />
+      <Header
+        isAudioEnabled={portfolioAudio.isAudioEnabled}
+        onToggleAudio={portfolioAudio.toggleAudio}
+        playHoverSound={portfolioAudio.playHoverSound}
+      />
 
       <main>
         {caseStudySlug ? (
@@ -98,61 +400,159 @@ function App() {
             <CaseStudyNotFound />
           )
         ) : (
-          <HomePage />
+          <HomePage playHoverSound={portfolioAudio.playHoverSound} />
         )}
       </main>
     </div>
   )
 }
 
-function HomePage() {
+function BootScreen({ isExiting }: { isExiting: boolean }) {
+  return (
+    <div
+      className={`boot-screen ${isExiting ? 'is-exiting' : ''}`}
+      role="status"
+      aria-label="Loading Joshua portfolio"
+    >
+      <div className="boot-crystal-grid" aria-hidden="true">
+        {bootCrystalCells.map((_, index) => (
+          <span key={index} />
+        ))}
+      </div>
+
+      <div className="boot-loader">
+        <span className="boot-logo">{profile.initials}</span>
+        <div className="boot-signal" aria-hidden="true">
+          {bootSignalBars.map((_, index) => (
+            <span key={index} />
+          ))}
+        </div>
+        <p>SIGNAL ACQUIRING</p>
+        <div className="boot-progress" aria-hidden="true">
+          <span />
+        </div>
+        <small>CONNECTING PORTFOLIO</small>
+      </div>
+    </div>
+  )
+}
+
+function HomePage({ playHoverSound }: { playHoverSound: () => void }) {
   return (
     <>
-      <Hero />
+      <Hero playHoverSound={playHoverSound} />
       <FocusSection />
       <ProjectsSection />
       <SkillsSection />
       <ExperienceSection />
       <ContactSection />
+      <SignatureSection />
     </>
   )
 }
 
-function Header() {
+function Header({
+  isAudioEnabled,
+  onToggleAudio,
+  playHoverSound,
+}: {
+  isAudioEnabled: boolean
+  onToggleAudio: () => Promise<void>
+  playHoverSound: () => void
+}) {
+  const navRef = useRef<HTMLElement>(null)
+  const [hoverFrame, setHoverFrame] = useState<HoverFrame | null>(null)
+
+  const activateNavFrame = useCallback(
+    (target: HTMLElement) => {
+      const navElement = navRef.current
+      if (!navElement) {
+        return
+      }
+
+      const navRect = navElement.getBoundingClientRect()
+      const targetRect = target.getBoundingClientRect()
+
+      setHoverFrame({
+        height: targetRect.height,
+        left: targetRect.left - navRect.left,
+        top: targetRect.top - navRect.top,
+        width: targetRect.width,
+      })
+      playHoverSound()
+    },
+    [playHoverSound],
+  )
+
   return (
     <header className="site-header">
-      <a className="brand-mark" href="/" aria-label={`${profile.name} home`}>
-        <span>{profile.initials}</span>
-      </a>
+      <div className="brand-cluster">
+        <a className="brand-mark" href="/" aria-label={`${profile.name} home`}>
+          <span>{profile.initials}</span>
+        </a>
 
-      <nav className="nav-links" aria-label="Primary navigation">
-        {navItems.map((item) => (
-          <a key={item.href} href={item.href}>
-            {item.label}
+        <button
+          className={`audio-toggle ${isAudioEnabled ? 'is-active' : ''}`}
+          type="button"
+          aria-label={isAudioEnabled ? 'Disable ambient sound' : 'Enable ambient sound'}
+          aria-pressed={isAudioEnabled}
+          onClick={() => {
+            void onToggleAudio()
+          }}
+          onMouseEnter={playHoverSound}
+          onPointerEnter={playHoverSound}
+        >
+          <span className="audio-wave" aria-hidden="true">
+            {audioWaveBars.map((_, index) => (
+              <span key={index} />
+            ))}
+          </span>
+        </button>
+      </div>
+
+      <nav
+        className="nav-links recruiter-nav"
+        aria-label="Recruiter navigation"
+        ref={navRef}
+        onMouseLeave={() => setHoverFrame(null)}
+        onBlur={(event) => {
+          const nextTarget = event.relatedTarget
+          if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
+            setHoverFrame(null)
+          }
+        }}
+      >
+        {hoverFrame && (
+          <span
+            className="nav-hover-frame"
+            aria-hidden="true"
+            style={{
+              height: hoverFrame.height,
+              transform: `translate3d(${hoverFrame.left}px, ${hoverFrame.top}px, 0)`,
+              width: hoverFrame.width,
+            }}
+          >
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
+        )}
+
+        {headerNavItems.map((item) => (
+          <a
+            key={item.label}
+            href={item.href}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noreferrer' : undefined}
+            onMouseEnter={(event) => activateNavFrame(event.currentTarget)}
+            onPointerEnter={(event) => activateNavFrame(event.currentTarget)}
+            onFocus={(event) => activateNavFrame(event.currentTarget)}
+          >
+            <span>{item.label}</span>
           </a>
         ))}
       </nav>
-
-      <div className="header-actions">
-        <a
-          className="icon-link"
-          href={profile.links.github}
-          aria-label="GitHub profile"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <GitBranch size={18} />
-        </a>
-        <a
-          className="icon-link"
-          href={profile.links.linkedin}
-          aria-label="LinkedIn profile"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <BriefcaseBusiness size={18} />
-        </a>
-      </div>
     </header>
   )
 }
@@ -173,10 +573,10 @@ function Frame({ scrollProgress }: { scrollProgress: number }) {
   )
 }
 
-function Hero() {
+function Hero({ playHoverSound }: { playHoverSound: () => void }) {
   return (
     <section className="hero-section" id="top">
-      <HeroScene />
+      <HeroScene playHoverSound={playHoverSound} />
 
       <div className="hero-content">
         <motion.div
@@ -255,7 +655,7 @@ function Hero() {
   )
 }
 
-function HeroScene() {
+function HeroScene({ playHoverSound }: { playHoverSound: () => void }) {
   return (
     <div className="hero-scene" aria-hidden="true">
       <div className="scene-grid" />
@@ -274,6 +674,22 @@ function HeroScene() {
       <div className="signal-panel">
         <span>BUILD</span>
         <strong>PASSING</strong>
+      </div>
+      <div className="tech-orbit">
+        {techMedallions.map((item, index) => (
+          <span
+            aria-hidden="true"
+            className={`tech-medallion tech-medallion-${index + 1}`}
+            key={item.label}
+            onMouseEnter={playHoverSound}
+            onPointerEnter={playHoverSound}
+          >
+            <span className="tech-medallion-inner">
+              <strong>{item.mark}</strong>
+              <small>{item.label}</small>
+            </span>
+          </span>
+        ))}
       </div>
     </div>
   )
@@ -650,6 +1066,15 @@ function ContactSection() {
           </span>
         </div>
       </div>
+    </section>
+  )
+}
+
+function SignatureSection() {
+  return (
+    <section className="signature-section" aria-label="Joshua signature">
+      <p className="eyebrow">Built and shipped by</p>
+      <strong>JOSHUA</strong>
     </section>
   )
 }
