@@ -29,11 +29,13 @@ import {
 } from './data/portfolio'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 26, filter: 'blur(10px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  hidden: { opacity: 0, y: 42, scale: 0.96, filter: 'blur(14px)' },
+  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
 }
 
 const caseStudyPathPattern = /^\/case-studies\/([^/]+)\/?$/
+const heroLead =
+  'Software engineering student building clean web products, cloud-aware tools, and AI-assisted workflows.'
 
 type HeaderNavItem = {
   label: string
@@ -84,6 +86,13 @@ const techMedallions = [
 const audioWaveBars = Array.from({ length: 7 })
 const bootCrystalCells = Array.from({ length: 12 })
 const bootSignalBars = Array.from({ length: 4 })
+const lofiTrack = {
+  artist: 'OMF-Games',
+  license: 'CC0',
+  source: 'https://opengameart.org/content/lofi-hip-hop-loop',
+  src: '/audio/lofi-hip-hop-loop.ogg',
+  title: 'Lofi Hip Hop Loop',
+}
 
 function createAudioContext() {
   const audioWindow = window as Window &
@@ -102,11 +111,82 @@ function usePortfolioAudio(): PortfolioAudio {
   const ambientNodesRef = useRef<AmbientNodes | null>(null)
   const audioEnabledRef = useRef(false)
   const lastHoverSoundRef = useRef(0)
+  const lofiAudioRef = useRef<HTMLAudioElement | null>(null)
+  const musicFadeFrameRef = useRef<number | null>(null)
 
   const getContext = useCallback(() => {
     audioContextRef.current ??= createAudioContext()
     return audioContextRef.current
   }, [])
+
+  const getLofiAudio = useCallback(() => {
+    if (!lofiAudioRef.current) {
+      const audio = new Audio(lofiTrack.src)
+      audio.loop = true
+      audio.preload = 'auto'
+      audio.volume = 0
+      lofiAudioRef.current = audio
+    }
+
+    return lofiAudioRef.current
+  }, [])
+
+  const fadeLofiVolume = useCallback((targetVolume: number, durationMs = 900) => {
+    const audio = lofiAudioRef.current
+    if (!audio) {
+      return
+    }
+
+    if (musicFadeFrameRef.current) {
+      window.cancelAnimationFrame(musicFadeFrameRef.current)
+    }
+
+    const startVolume = audio.volume
+    const startedAt = window.performance.now()
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startedAt) / durationMs, 1)
+      audio.volume = startVolume + (targetVolume - startVolume) * progress
+
+      if (progress < 1) {
+        musicFadeFrameRef.current = window.requestAnimationFrame(tick)
+      }
+    }
+
+    musicFadeFrameRef.current = window.requestAnimationFrame(tick)
+  }, [])
+
+  const stopLofiTrack = useCallback((reset = true) => {
+    const audio = lofiAudioRef.current
+    if (!audio) {
+      return
+    }
+
+    if (musicFadeFrameRef.current) {
+      window.cancelAnimationFrame(musicFadeFrameRef.current)
+      musicFadeFrameRef.current = null
+    }
+
+    audio.pause()
+    audio.volume = 0
+    if (reset) {
+      audio.currentTime = 0
+    }
+  }, [])
+
+  const startLofiTrack = useCallback(async () => {
+    const audio = getLofiAudio()
+    audio.volume = 0
+
+    try {
+      await audio.play()
+      fadeLofiVolume(0.24, 1200)
+      return true
+    } catch {
+      stopLofiTrack()
+      return false
+    }
+  }, [fadeLofiVolume, getLofiAudio, stopLofiTrack])
 
   const stopAmbient = useCallback(() => {
     const context = audioContextRef.current
@@ -169,24 +249,24 @@ function usePortfolioAudio(): PortfolioAudio {
     const sourceGain = context.createGain()
 
     masterGain.gain.setValueAtTime(0.0001, context.currentTime)
-    masterGain.gain.exponentialRampToValueAtTime(0.032, context.currentTime + 1.2)
+    masterGain.gain.exponentialRampToValueAtTime(0.025, context.currentTime + 1.8)
     filter.type = 'lowpass'
-    filter.frequency.setValueAtTime(640, context.currentTime)
-    filter.Q.setValueAtTime(8, context.currentTime)
-    lfo.frequency.setValueAtTime(0.07, context.currentTime)
-    lfoGain.gain.setValueAtTime(160, context.currentTime)
-    sourceGain.gain.setValueAtTime(0.22, context.currentTime)
+    filter.frequency.setValueAtTime(520, context.currentTime)
+    filter.Q.setValueAtTime(5, context.currentTime)
+    lfo.frequency.setValueAtTime(0.035, context.currentTime)
+    lfoGain.gain.setValueAtTime(120, context.currentTime)
+    sourceGain.gain.setValueAtTime(0.2, context.currentTime)
 
     lfo.connect(lfoGain)
     lfoGain.connect(filter.frequency)
     filter.connect(masterGain)
     masterGain.connect(context.destination)
 
-    const oscillators = [48, 67, 95].map((frequency, index) => {
+    const oscillators = [44, 55, 82, 110].map((frequency, index) => {
       const oscillator = context.createOscillator()
-      oscillator.type = index === 1 ? 'triangle' : 'sine'
+      oscillator.type = index === 2 ? 'triangle' : 'sine'
       oscillator.frequency.setValueAtTime(frequency, context.currentTime)
-      oscillator.detune.setValueAtTime(index === 2 ? 7 : -5, context.currentTime)
+      oscillator.detune.setValueAtTime(index % 2 === 0 ? -7 : 6, context.currentTime)
       oscillator.connect(sourceGain)
       oscillator.start()
       return oscillator
@@ -269,6 +349,7 @@ function usePortfolioAudio(): PortfolioAudio {
 
     if (isAudioEnabled) {
       audioEnabledRef.current = false
+      stopLofiTrack()
       stopAmbient()
       setIsAudioEnabled(false)
       return
@@ -276,13 +357,24 @@ function usePortfolioAudio(): PortfolioAudio {
 
     await context.resume()
     audioEnabledRef.current = true
-    startAmbient(context)
+    const didStartLofiTrack = await startLofiTrack()
+    if (!didStartLofiTrack) {
+      startAmbient(context)
+    }
     setIsAudioEnabled(true)
 
     window.setTimeout(() => {
       playTone('click')
     }, 40)
-  }, [getContext, isAudioEnabled, playTone, startAmbient, stopAmbient])
+  }, [
+    getContext,
+    isAudioEnabled,
+    playTone,
+    startAmbient,
+    startLofiTrack,
+    stopAmbient,
+    stopLofiTrack,
+  ])
 
   useEffect(() => {
     if (!isAudioEnabled) {
@@ -308,9 +400,10 @@ function usePortfolioAudio(): PortfolioAudio {
   useEffect(
     () => () => {
       stopAmbient()
+      stopLofiTrack()
       void audioContextRef.current?.close()
     },
-    [stopAmbient],
+    [stopAmbient, stopLofiTrack],
   )
 
   return { isAudioEnabled, playHoverSound, toggleAudio }
@@ -441,6 +534,7 @@ function HomePage({ playHoverSound }: { playHoverSound: () => void }) {
   return (
     <>
       <Hero playHoverSound={playHoverSound} />
+      <ProofSection />
       <FocusSection />
       <ProjectsSection />
       <SkillsSection />
@@ -494,8 +588,9 @@ function Header({
         <button
           className={`audio-toggle ${isAudioEnabled ? 'is-active' : ''}`}
           type="button"
-          aria-label={isAudioEnabled ? 'Disable ambient sound' : 'Enable ambient sound'}
+          aria-label={isAudioEnabled ? 'Disable lofi ambience' : 'Enable lofi ambience'}
           aria-pressed={isAudioEnabled}
+          title={`${lofiTrack.title} by ${lofiTrack.artist} (${lofiTrack.license})`}
           onClick={() => {
             void onToggleAudio()
           }}
@@ -593,7 +688,7 @@ function Hero({ playHoverSound }: { playHoverSound: () => void }) {
 
           <p className="eyebrow">{profile.role}</p>
           <h1>{profile.headline}</h1>
-          <p className="hero-summary">{profile.summary}</p>
+          <p className="hero-summary">{heroLead}</p>
 
           <div className="hero-actions" aria-label="Primary actions">
             <a className="button button-primary" href="/#projects">
@@ -606,49 +701,9 @@ function Hero({ playHoverSound }: { playHoverSound: () => void }) {
             </a>
           </div>
         </motion.div>
-
-        <motion.div
-          className="hero-panel"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.65, delay: 0.16, ease: 'easeOut' }}
-        >
-          <div className="terminal-card">
-            <div className="terminal-topbar">
-              <span />
-              <span />
-              <span />
-              <p>portfolio.tsx</p>
-            </div>
-            <div className="terminal-body">
-              <p>
-                <span className="muted">$</span> npm run build
-              </p>
-              <p>
-                <span className="success">✓</span> 86% academic average
-              </p>
-              <p>
-                <span className="success">✓</span> DevClub leadership
-              </p>
-              <p>
-                <span className="success">✓</span> CV ready for download
-              </p>
-            </div>
-          </div>
-
-          <div className="metric-grid">
-            {metrics.map((metric) => (
-              <div key={metric.label} className="metric-card">
-                <span>{metric.label}</span>
-                <strong>{metric.value}</strong>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
 
-      <a className="scroll-cue" href="/#projects" aria-label="Jump to projects">
+      <a className="scroll-cue" href="/#proof" aria-label="Jump to portfolio signal">
         <ArrowDown size={18} />
       </a>
     </section>
@@ -659,34 +714,24 @@ function HeroScene({ playHoverSound }: { playHoverSound: () => void }) {
   return (
     <div className="hero-scene" aria-hidden="true">
       <div className="scene-grid" />
-      <div className="code-column code-column-left">
-        {['const craft = "clean"', 'type Stack = React', 'git push origin main'].map(
-          (line) => (
-            <span key={line}>{line}</span>
-          ),
-        )}
-      </div>
-      <div className="code-column code-column-right">
-        {['api.status = 200', 'tests: passing', 'deploy: ready'].map((line) => (
-          <span key={line}>{line}</span>
-        ))}
-      </div>
-      <div className="signal-panel">
-        <span>BUILD</span>
-        <strong>PASSING</strong>
-      </div>
       <div className="tech-orbit">
         {techMedallions.map((item, index) => (
           <span
             aria-hidden="true"
-            className={`tech-medallion tech-medallion-${index + 1}`}
+            className={`tech-orbit-ring tech-orbit-ring-${index + 1}`}
             key={item.label}
-            onMouseEnter={playHoverSound}
-            onPointerEnter={playHoverSound}
           >
-            <span className="tech-medallion-inner">
-              <strong>{item.mark}</strong>
-              <small>{item.label}</small>
+            <span className="tech-orbit-path">
+              <span
+                className="tech-medallion"
+                onMouseEnter={playHoverSound}
+                onPointerEnter={playHoverSound}
+              >
+                <span className="tech-medallion-inner">
+                  <strong>{item.mark}</strong>
+                  <small>{item.label}</small>
+                </span>
+              </span>
             </span>
           </span>
         ))}
@@ -695,9 +740,70 @@ function HeroScene({ playHoverSound }: { playHoverSound: () => void }) {
   )
 }
 
+function ProofSection() {
+  return (
+    <motion.section
+      className="section proof-section"
+      id="proof"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.24 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
+      <div className="section-heading section-heading-wide">
+        <p className="eyebrow">Signal</p>
+        <h2>The quick proof, then the deeper story.</h2>
+      </div>
+
+      <div className="hero-panel proof-panel">
+        <div className="terminal-card">
+          <div className="terminal-topbar">
+            <span />
+            <span />
+            <span />
+            <p>portfolio.tsx</p>
+          </div>
+          <div className="terminal-body">
+            <p>
+              <span className="muted">$</span> npm run build
+            </p>
+            <p>
+              <span className="success">✓</span> 86% academic average
+            </p>
+            <p>
+              <span className="success">✓</span> DevClub leadership
+            </p>
+            <p>
+              <span className="success">✓</span> CV ready for download
+            </p>
+          </div>
+        </div>
+
+        <div className="metric-grid">
+          {metrics.map((metric) => (
+            <div key={metric.label} className="metric-card">
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.section>
+  )
+}
+
 function FocusSection() {
   return (
-    <section className="section section-split" id="about">
+    <motion.section
+      className="section section-split"
+      id="about"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
       <motion.div
         className="section-heading"
         variants={fadeUp}
@@ -727,13 +833,21 @@ function FocusSection() {
           </motion.article>
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
 function ProjectsSection() {
   return (
-    <section className="section" id="projects">
+    <motion.section
+      className="section"
+      id="projects"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.14 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
       <div className="section-heading section-heading-wide">
         <p className="eyebrow">Selected work</p>
         <h2>Projects that show how I think, build, and polish.</h2>
@@ -744,7 +858,7 @@ function ProjectsSection() {
           <ProjectCard key={project.title} project={project} index={index} />
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
@@ -969,54 +1083,94 @@ function CaseStudyNotFound() {
 
 function SkillsSection() {
   return (
-    <section className="section skills-section" id="skills">
+    <motion.section
+      className="section skills-section"
+      id="skills"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
       <div className="section-heading">
         <p className="eyebrow">Skills</p>
         <h2>Practical tools, grouped by how they show up in real work.</h2>
       </div>
 
       <div className="skills-grid">
-        {skills.map((skillGroup) => (
-          <article className="skill-card" key={skillGroup.group}>
+        {skills.map((skillGroup, index) => (
+          <motion.article
+            className="skill-card"
+            key={skillGroup.group}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.26 }}
+            transition={{ duration: 0.5, delay: index * 0.06 }}
+          >
             <h3>{skillGroup.group}</h3>
             <ul>
               {skillGroup.items.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-          </article>
+          </motion.article>
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
 function ExperienceSection() {
   return (
-    <section className="section timeline-section" id="experience">
+    <motion.section
+      className="section timeline-section"
+      id="experience"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
       <div className="section-heading">
         <p className="eyebrow">Experience</p>
         <h2>A focused timeline for growth, projects, and stronger delivery.</h2>
       </div>
 
       <div className="timeline">
-        {timeline.map((item) => (
-          <article className="timeline-item" key={`${item.date}-${item.title}`}>
+        {timeline.map((item, index) => (
+          <motion.article
+            className="timeline-item"
+            key={`${item.date}-${item.title}`}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.28 }}
+            transition={{ duration: 0.5, delay: index * 0.07 }}
+          >
             <span>{item.date}</span>
             <div>
               <h3>{item.title}</h3>
               <p>{item.description}</p>
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
 function ContactSection() {
   return (
-    <section className="contact-section" id="contact">
+    <motion.section
+      className="contact-section"
+      id="contact"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.22 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
       <div className="contact-card">
         <div>
           <p className="eyebrow">Contact</p>
@@ -1066,16 +1220,24 @@ function ContactSection() {
           </span>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }
 
 function SignatureSection() {
   return (
-    <section className="signature-section" aria-label="Joshua signature">
+    <motion.section
+      className="signature-section"
+      aria-label="Joshua signature"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.26 }}
+      transition={{ duration: 0.72, ease: 'easeOut' }}
+    >
       <p className="eyebrow">Built and shipped by</p>
       <strong>JOSHUA</strong>
-    </section>
+    </motion.section>
   )
 }
 
