@@ -32,8 +32,10 @@ SUMMARY = (
     "React/Next.js, TypeScript, Python, PHP/MySQL, Supabase, cloud fundamentals, "
     "and AI data evaluation. Strong academic performer with an 86% average, "
     "chairperson of Vossie DevClub, and current Eduvos tutor for ITMTA1-B22 "
-    "students. Practical experience leading tutorial sessions, building product "
-    "prototypes, and working remotely with detailed AI annotation guidelines."
+    "students. Practical experience leading tutorial sessions, supporting "
+    "Nature's Valley community IT and youth-ambassador coordination, building "
+    "product prototypes, and working remotely with detailed AI annotation "
+    "guidelines."
 )
 
 SECTIONS = [
@@ -79,6 +81,19 @@ SECTIONS = [
                     "Lead weekly two-hour Teams tutorial sessions for ITMTA1-B22 students with full-slot availability.",
                     "Provided live exam-logistics support during the June 19, 2026 ITMTA1-B22 Teams tutorial session.",
                     "Coordinate tutoring availability with Eduvos staff and track tutoring hours for the weekly allocation.",
+                ],
+            )
+        ],
+    ),
+    (
+        "Current Community Experience",
+        [
+            (
+                "Nature's Valley Trust Community IT and Youth Ambassador Support",
+                "Nature's Valley, South Africa | June 2026",
+                [
+                    "Support Gavin on KuCoNa IT installation during Nature's Valley Trust coordination.",
+                    "Coordinate with Andrew to meet 10 youth ambassadors ahead of their July 1, 2026 start.",
                 ],
             )
         ],
