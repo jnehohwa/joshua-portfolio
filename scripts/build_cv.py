@@ -9,7 +9,6 @@ from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import (
-    PageBreak,
     Paragraph,
     SimpleDocTemplate,
     Spacer,
@@ -32,9 +31,11 @@ SUMMARY = (
     "Software Engineering student and junior developer with experience across "
     "React/Next.js, TypeScript, Python, PHP/MySQL, Supabase, cloud fundamentals, "
     "and AI data evaluation. Strong academic performer with an 86% average, "
-    "chairperson of Vossie DevClub, and practical experience leading technical "
-    "workshops, building product prototypes, and working remotely with detailed "
-    "AI annotation guidelines."
+    "chairperson of Vossie DevClub, and current Eduvos tutor for ITMTA1-B22 "
+    "students. Practical experience leading tutorial sessions, supporting "
+    "Nature's Valley community IT and youth-ambassador coordination, building "
+    "product prototypes, and working remotely with detailed AI annotation "
+    "guidelines."
 )
 
 SECTIONS = [
@@ -68,6 +69,33 @@ SECTIONS = [
                 "PostgreSQL, MySQL, Supabase, AWS EC2, S3, IAM, Lambda",
                 [],
             ),
+        ],
+    ),
+    (
+        "Current Tutoring Experience",
+        [
+            (
+                "ITMTA1-B22 Tutor, Eduvos University",
+                "Mowbray / Online | May 2026 - Present",
+                [
+                    "Lead weekly two-hour Teams tutorial sessions for ITMTA1-B22 students with full-slot availability.",
+                    "Provided live exam-logistics support during the June 19, 2026 ITMTA1-B22 Teams tutorial session.",
+                    "Coordinate tutoring availability with Eduvos staff and track tutoring hours for the weekly allocation.",
+                ],
+            )
+        ],
+    ),
+    (
+        "Current Community Experience",
+        [
+            (
+                "Nature's Valley Trust Community IT and Youth Ambassador Support",
+                "Nature's Valley, South Africa | June 2026",
+                [
+                    "Support Gavin on KuCoNa IT installation during Nature's Valley Trust coordination.",
+                    "Coordinate with Andrew to meet 10 youth ambassadors ahead of their July 1, 2026 start.",
+                ],
+            )
         ],
     ),
     (
@@ -222,7 +250,7 @@ def build_docx():
     subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
     subtitle.paragraph_format.space_after = Pt(4)
     subtitle_run = subtitle.add_run(
-        "Software Engineering Student | Junior Software Developer"
+        "Software Engineering Student | Junior Software Developer | Eduvos Tutor"
     )
     set_run_style(subtitle_run, size=10.5, bold=True, color="0F766E")
 
@@ -320,7 +348,7 @@ def build_pdf():
         [
             Paragraph("Joshua Nehohwa", title_style),
             Paragraph(
-                "Software Engineering Student | Junior Software Developer",
+                "Software Engineering Student | Junior Software Developer | Eduvos Tutor",
                 subtitle_style,
             ),
             Paragraph(" | ".join(CONTACT), contact_style),
@@ -330,9 +358,6 @@ def build_pdf():
     )
 
     for section_title, entries in SECTIONS:
-        if section_title == "Professional Experience":
-            story.append(PageBreak())
-
         story.append(Paragraph(section_title.upper(), heading_style))
         for title_text, meta, bullets in entries:
             role = f"<b>{title_text}</b>"

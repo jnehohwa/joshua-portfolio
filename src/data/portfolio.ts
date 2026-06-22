@@ -60,11 +60,11 @@ export type TimelineItem = {
 export const profile = {
   name: 'Joshua Nehohwa',
   initials: 'JN',
-  role: 'Software Engineering Student | Junior Software Developer',
+  role: 'Software Engineering Student | Junior Software Developer | Eduvos Tutor',
   location: 'Cape Town, South Africa / GMT+2',
-  headline: 'I build practical software systems with clean code and product focus.',
+  headline: 'I build practical software systems and help students understand them.',
   summary:
-    'I am completing a BSc in Information Technology, specializing in Software Engineering, with hands-on work across React, Next.js, TypeScript, Python, PHP/MySQL, Supabase, AWS, and AI data evaluation.',
+    'I am completing a BSc in Information Technology, specializing in Software Engineering, with hands-on work across React, Next.js, TypeScript, Python, PHP/MySQL, Supabase, AWS, AI data evaluation, current Eduvos tutoring, and Nature\'s Valley community IT support.',
   availability: 'Open to junior software engineering, frontend, and full-stack roles',
   links: {
     email: 'mailto:nehohwajoshua@gmail.com',
@@ -83,6 +83,8 @@ export const navItems = [
 
 export const metrics = [
   { label: 'Academic average', value: '86%' },
+  { label: 'Current tutoring', value: 'ITMTA1-B22' },
+  { label: 'Community support', value: 'KuCoNa + youth ambassadors' },
   { label: 'Leadership', value: 'Vossie DevClub Chair' },
   { label: 'GitHub', value: '9 public repos' },
 ]
@@ -97,6 +99,11 @@ export const focusAreas = [
     title: 'AI and data quality',
     description:
       'Remote AI data annotation experience with complex guidelines, model response evaluation, and structured data handling.',
+  },
+  {
+    title: 'Teaching and community support',
+    description:
+      'Currently leading Eduvos ITMTA1-B22 tutorial sessions and supporting Nature\'s Valley work involving KuCoNa IT setup and youth-ambassador coordination.',
   },
   {
     title: 'Cloud and security foundations',
@@ -454,9 +461,33 @@ export const skills = [
     group: 'Cloud and workflow',
     items: ['AWS EC2', 'AWS S3', 'AWS IAM', 'AWS Lambda', 'Git', 'Linux', 'Docker basics'],
   },
+  {
+    group: 'Teaching and leadership',
+    items: [
+      'Tutorial facilitation',
+      'Exam support',
+      'Student mentoring',
+      'Youth ambassador coordination',
+      'Community IT support',
+      'Technical workshops',
+      'Campus leadership',
+    ],
+  },
 ]
 
 export const timeline: TimelineItem[] = [
+  {
+    date: 'June 2026',
+    title: 'Nature\'s Valley Trust community IT support',
+    description:
+      'Supporting Gavin on KuCoNa IT installation and coordinating a planned meeting with 10 youth ambassadors by connecting with Andrew.',
+  },
+  {
+    date: 'May 2026 - Present',
+    title: 'ITMTA1-B22 Tutor, Eduvos',
+    description:
+      'Lead weekly two-hour Teams tutorial sessions for ITMTA1-B22 students, including the June 19, 2026 scheduled session and live support for exam-related questions.',
+  },
   {
     date: '2025 - Present',
     title: 'Chairperson, Vossie DevClub',

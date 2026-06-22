@@ -35,7 +35,7 @@ const fadeUp = {
 
 const caseStudyPathPattern = /^\/case-studies\/([^/]+)\/?$/
 const heroLead =
-  'Software engineering student building clean web products, cloud-aware tools, and AI-assisted workflows.'
+  'Software engineering student building clean web products, cloud-aware tools, AI-assisted workflows, student-facing tutorial support, and community IT coordination.'
 
 type HeaderNavItem = {
   label: string
@@ -772,7 +772,13 @@ function ProofSection() {
               <span className="success">✓</span> 86% academic average
             </p>
             <p>
-              <span className="success">✓</span> DevClub leadership
+              <span className="success">✓</span> Eduvos ITMTA1-B22 tutor
+            </p>
+            <p>
+              <span className="success">✓</span> Weekly Teams tutorial sessions
+            </p>
+            <p>
+              <span className="success">✓</span> Nature's Valley KuCoNa + youth support
             </p>
             <p>
               <span className="success">✓</span> CV ready for download
