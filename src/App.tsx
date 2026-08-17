@@ -870,6 +870,9 @@ function ProjectsSection() {
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const projectTitle = project.tileTitle ?? project.title
+  const showSubtitle = project.tileTitle && project.tileTitle !== project.title
+
   return (
     <motion.article
       className="project-card"
@@ -890,7 +893,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <div className="preview-sidebar" />
             <div className="preview-content">
               <span className="preview-kicker">{project.type}</span>
-              <strong>{project.title}</strong>
+              <strong>{projectTitle}</strong>
               <div className="preview-lines">
                 <span />
                 <span />
@@ -908,7 +911,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
       <div className="project-details">
         <span className="project-type">{project.type}</span>
-        <h3>{project.title}</h3>
+        <h3>{projectTitle}</h3>
+        {showSubtitle && <p className="project-subtitle">{project.title}</p>}
         <div className="project-meta" aria-label={`${project.title} role and timeline`}>
           <span>{project.role}</span>
           <span>{project.timeline}</span>

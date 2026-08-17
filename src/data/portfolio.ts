@@ -6,6 +6,7 @@ export type ProjectLink = {
 
 export type Project = {
   title: string
+  tileTitle?: string
   type: string
   role: string
   timeline: string
@@ -121,6 +122,7 @@ export const focusAreas = [
 export const projects: Project[] = [
   {
     title: 'KuCoNa Digital Operations System',
+    tileTitle: 'Nature\'s Valley Trust / KuCoNa',
     type: 'Community website and operations system',
     role: 'Digital systems and web development intern',
     timeline: 'June 2026 - August 2026',

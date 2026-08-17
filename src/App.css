@@ -1306,6 +1306,7 @@
 .preview-content strong {
   color: var(--text-strong);
   font-size: 1.45rem;
+  overflow-wrap: anywhere;
 }
 
 .preview-lines,
@@ -1362,6 +1363,15 @@
 .project-details h3 {
   margin-top: 12px;
   font-size: 2rem;
+  overflow-wrap: anywhere;
+}
+
+.project-subtitle {
+  margin: 6px 0 12px;
+  color: var(--accent-cool);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
 }
 
 .project-impact {
