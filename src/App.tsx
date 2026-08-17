@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowUpRight,
-  CheckCircle2,
-  Code2,
-  Download,
-  GitBranch,
-  Mail,
-  MapPin,
-  ShieldCheck,
-  Sparkles,
-  Terminal,
-} from 'lucide-react'
+import ArrowDown from 'lucide-react/dist/esm/icons/arrow-down.mjs'
+import ArrowLeft from 'lucide-react/dist/esm/icons/arrow-left.mjs'
+import ArrowUpRight from 'lucide-react/dist/esm/icons/arrow-up-right.mjs'
+import CheckCircle2 from 'lucide-react/dist/esm/icons/check-circle-2.mjs'
+import Code2 from 'lucide-react/dist/esm/icons/code-2.mjs'
+import Download from 'lucide-react/dist/esm/icons/download.mjs'
+import GitBranch from 'lucide-react/dist/esm/icons/git-branch.mjs'
+import Mail from 'lucide-react/dist/esm/icons/mail.mjs'
+import MapPin from 'lucide-react/dist/esm/icons/map-pin.mjs'
+import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check.mjs'
+import Sparkles from 'lucide-react/dist/esm/icons/sparkles.mjs'
+import Terminal from 'lucide-react/dist/esm/icons/terminal.mjs'
 import './App.css'
 import {
   caseStudies,
@@ -35,7 +33,7 @@ const fadeUp = {
 
 const caseStudyPathPattern = /^\/case-studies\/([^/]+)\/?$/
 const heroLead =
-  'Software engineering student building clean web products, cloud-aware tools, AI-assisted workflows, student-facing tutorial support, and community IT coordination.'
+  'Software engineering student building clean web products, community operations systems, cloud-aware tools, AI-assisted workflows, and student-facing tutorial support.'
 
 type HeaderNavItem = {
   label: string
@@ -778,7 +776,10 @@ function ProofSection() {
               <span className="success">✓</span> Weekly Teams tutorial sessions
             </p>
             <p>
-              <span className="success">✓</span> Nature's Valley KuCoNa + youth support
+              <span className="success">✓</span> KuCoNa WordPress + Airtable system
+            </p>
+            <p>
+              <span className="success">✓</span> 15+ public pages and 47-question survey
             </p>
             <p>
               <span className="success">✓</span> CV ready for download

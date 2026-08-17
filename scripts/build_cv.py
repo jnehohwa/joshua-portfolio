@@ -29,13 +29,12 @@ CONTACT = [
 
 SUMMARY = (
     "Software Engineering student and junior developer with experience across "
-    "React/Next.js, TypeScript, Python, PHP/MySQL, Supabase, cloud fundamentals, "
-    "and AI data evaluation. Strong academic performer with an 86% average, "
-    "chairperson of Vossie DevClub, and current Eduvos tutor for ITMTA1-B22 "
-    "students. Practical experience leading tutorial sessions, supporting "
-    "Nature's Valley community IT and youth-ambassador coordination, building "
-    "product prototypes, and working remotely with detailed AI annotation "
-    "guidelines."
+    "React/Next.js, TypeScript, Python, PHP/MySQL, WordPress/Elementor, "
+    "Airtable, Jotform, Make.com, Supabase, cloud fundamentals, and AI data "
+    "evaluation. Strong academic performer with an 86% average, chairperson "
+    "of Vossie DevClub, recent Digital Systems and Web Development Intern for "
+    "Nature's Valley Trust / KuCoNa, and current Eduvos tutor for ITMTA1-B22 "
+    "students."
 )
 
 SECTIONS = [
@@ -56,19 +55,36 @@ SECTIONS = [
         [
             (
                 "Languages",
-                "Python, JavaScript, TypeScript, Visual Basic, Java, PHP",
+                "Python, JavaScript, TypeScript, HTML, CSS, Visual Basic, Java, PHP",
                 [],
             ),
             (
                 "Frameworks and tools",
-                "React, Next.js, Node.js, Tailwind CSS, Supabase, Clerk Auth, Git, Linux, Docker basics, Figma, Justinmind",
+                "React, Next.js, Node.js, WordPress, Elementor, Tailwind CSS, Supabase, Clerk Auth, Git, Linux, Docker basics, Figma, Justinmind",
                 [],
             ),
             (
-                "Databases and cloud",
-                "PostgreSQL, MySQL, Supabase, AWS EC2, S3, IAM, Lambda",
+                "Data, automation, and cloud",
+                "PostgreSQL, MySQL, Airtable, Jotform, Make.com, Google Forms, Google Sheets, Google Apps Script, AWS EC2, S3, IAM, Lambda",
                 [],
             ),
+        ],
+    ),
+    (
+        "Recent Internship Experience",
+        [
+            (
+                "Digital Systems and Web Development Intern, Nature's Valley Trust / KuCoNa",
+                "Nature's Valley, South Africa | 1 Jun 2026 - 1 Aug 2026",
+                [
+                    "Built and launched a responsive WordPress/Elementor website for KuCoNa, covering three programme hubs, 15+ public pages, registration pathways, and a 14-partner directory.",
+                    "Designed a privacy-conscious operations workflow connecting WordPress, Jotform, Make.com, and Airtable.",
+                    "Configured and tested automated youth-registration intake, Airtable integration logging, attendance support, and duplicate-prevention fields.",
+                    "Cleaned 1,037 demonstration records while preserving the live Airtable schema and integrations.",
+                    "Developed a 47-question bilingual community survey with Google Forms, Apps Script, and linked Google Sheets analytics.",
+                    "Created technical documentation, implementation checklists, and staff training resources to support organisational handover.",
+                ],
+            )
         ],
     ),
     (
@@ -81,19 +97,6 @@ SECTIONS = [
                     "Lead weekly two-hour Teams tutorial sessions for ITMTA1-B22 students with full-slot availability.",
                     "Provided live exam-logistics support during the June 19, 2026 ITMTA1-B22 Teams tutorial session.",
                     "Coordinate tutoring availability with Eduvos staff and track tutoring hours for the weekly allocation.",
-                ],
-            )
-        ],
-    ),
-    (
-        "Current Community Experience",
-        [
-            (
-                "Nature's Valley Trust Community IT and Youth Ambassador Support",
-                "Nature's Valley, South Africa | June 2026",
-                [
-                    "Support Gavin on KuCoNa IT installation during Nature's Valley Trust coordination.",
-                    "Coordinate with Andrew to meet 10 youth ambassadors ahead of their July 1, 2026 start.",
                 ],
             )
         ],

@@ -64,7 +64,7 @@ export const profile = {
   location: 'Cape Town, South Africa / GMT+2',
   headline: 'I build practical software systems and help students understand them.',
   summary:
-    'I am completing a BSc in Information Technology, specializing in Software Engineering, with hands-on work across React, Next.js, TypeScript, Python, PHP/MySQL, Supabase, AWS, AI data evaluation, current Eduvos ITMTA1-B22 tutoring, and Nature\'s Valley community IT support.',
+    'I am completing a BSc in Information Technology, specializing in Software Engineering, with hands-on work across React, Next.js, TypeScript, Python, PHP/MySQL, Supabase, AWS, AI data evaluation, Eduvos ITMTA1-B22 tutoring, and a Nature\'s Valley Trust / KuCoNa digital systems internship.',
   availability: 'Open to junior software engineering, frontend, and full-stack roles',
   links: {
     email: 'mailto:nehohwajoshua@gmail.com',
@@ -84,7 +84,8 @@ export const navItems = [
 export const metrics = [
   { label: 'Academic average', value: '86%' },
   { label: 'Current tutoring', value: 'ITMTA1-B22' },
-  { label: 'Community support', value: 'KuCoNa + youth ambassadors' },
+  { label: 'Recent internship', value: 'NVT / KuCoNa' },
+  { label: 'KuCoNa delivery', value: '15+ pages + 47-question survey' },
   { label: 'Leadership', value: 'Vossie DevClub Chair' },
   { label: 'GitHub', value: '9 public repos' },
 ]
@@ -101,9 +102,14 @@ export const focusAreas = [
       'Remote AI data annotation experience with complex guidelines, model response evaluation, and structured data handling.',
   },
   {
-    title: 'Teaching and community support',
+    title: 'Digital systems and community operations',
     description:
-      'Currently leading Eduvos ITMTA1-B22 tutorial sessions while supporting Nature\'s Valley work involving KuCoNa IT setup and youth-ambassador coordination.',
+      'Delivered a KuCoNa public website foundation, Jotform-to-Airtable intake workflow, Airtable Staff Home pages, and bilingual community survey with clear privacy boundaries.',
+  },
+  {
+    title: 'Teaching and student support',
+    description:
+      'Currently leading Eduvos ITMTA1-B22 tutorial sessions, with scheduled two-hour Teams availability and live support for exam-related questions.',
   },
   {
     title: 'Cloud and security foundations',
@@ -113,6 +119,36 @@ export const focusAreas = [
 ]
 
 export const projects: Project[] = [
+  {
+    title: 'KuCoNa Digital Operations System',
+    type: 'Community website and operations system',
+    role: 'Digital systems and web development intern',
+    timeline: 'June 2026 - August 2026',
+    summary:
+      'A public WordPress/Elementor website, intake workflow, Airtable operations structure, and bilingual community survey for KuCoNa Community Centre and Nature\'s Valley Trust.',
+    impact:
+      'Shows practical delivery across public web content, workflow automation, data modeling, privacy-conscious architecture, stakeholder handover, and staff-facing documentation.',
+    highlights: [
+      'Designed and launched a responsive KuCoNa website with 15+ structured pages, three programme hubs, registration pathways, and a 14-partner directory.',
+      'Built a privacy-conscious WordPress -> Jotform -> Make.com -> Airtable boundary for youth registration, staff intake views, integration logging, and duplicate-prevention support.',
+      'Created a 47-question bilingual English/Afrikaans community survey with consent branching, linked response analytics, and handover documentation.',
+    ],
+    stack: [
+      'WordPress',
+      'Elementor',
+      'HTML',
+      'CSS',
+      'JavaScript',
+      'Airtable',
+      'Jotform',
+      'Make.com',
+      'Google Apps Script',
+    ],
+    links: {
+      caseStudy: '/case-studies/kucona-digital-operations-system',
+      live: 'https://kucona.org.za/',
+    },
+  },
   {
     title: 'KasiSwap Marketplace',
     type: 'PHP/MySQL C2C marketplace',
@@ -195,6 +231,153 @@ export const projects: Project[] = [
 ]
 
 export const caseStudies: CaseStudy[] = [
+  {
+    slug: 'kucona-digital-operations-system',
+    title: 'KuCoNa Digital Operations System',
+    type: 'Community website and operations system',
+    role: 'Digital systems and web development intern',
+    timeline: '1 June 2026 - 1 August 2026',
+    status: 'Public foundation delivered with phased operational handover',
+    summary:
+      'KuCoNa needed more than a new website. I helped translate its programme model into a public WordPress website, connected intake workflow, Airtable operating structure, and community research survey while keeping sensitive learner and guardian data out of the public site.',
+    stack: [
+      'WordPress',
+      'Elementor',
+      'HTML',
+      'CSS',
+      'JavaScript',
+      'Node.js',
+      'Airtable',
+      'Jotform',
+      'Make.com',
+      'Google Forms',
+      'Google Sheets',
+      'Google Apps Script',
+      'POPIA-aware design',
+    ],
+    metrics: [
+      { label: 'Public pages', value: '15+' },
+      { label: 'Programme hubs', value: '3' },
+      { label: 'Partners', value: '14' },
+      { label: 'Demo records removed', value: '1,037' },
+      { label: 'Survey questions', value: '47' },
+      { label: 'Core pipeline', value: 'Jotform -> Make -> Airtable' },
+    ],
+    links: [
+      { label: 'Live site', href: 'https://kucona.org.za/', external: true },
+      { label: 'CV', href: '/Joshua_Nehohwa_CV.pdf' },
+    ],
+    heroImage: {
+      src: '/case-studies/kucona/kucona-home-mural.jpg',
+      alt: 'KuCoNa centre mural used in the website launch kit',
+      caption: 'Launch-kit media used to shape the public KuCoNa website experience.',
+    },
+    gallery: [
+      {
+        src: '/case-studies/kucona/community-care-knitting-group.jpg',
+        alt: 'Community Care activity group at KuCoNa',
+        caption: 'Community Care hub content translated programme work into public-facing pages.',
+      },
+      {
+        src: '/case-studies/kucona/learning-hub-classroom.jpg',
+        alt: 'Learning Hub classroom activity at KuCoNa',
+        caption: 'Learning Hub pages were structured around programmes, participation, and information needs.',
+      },
+      {
+        src: '/case-studies/kucona/nature-connect-coastal-activity.jpg',
+        alt: 'Nature Connect participants on a rocky beach',
+        caption: 'Nature Connect completed the three-hub public information architecture.',
+      },
+      {
+        src: '/case-studies/kucona/kucona-logo-horizontal.jpg',
+        alt: 'KuCoNa Community Centre logo',
+        caption: 'Branding and stakeholder material were converted into accessible website content.',
+      },
+    ],
+    sections: [
+      {
+        title: 'Project Overview',
+        body: [
+          'KuCoNa needed a connected digital foundation where community members could discover programmes, register for activities, volunteer, and access information while staff managed submissions securely behind the scenes.',
+          'I helped translate the operational architecture into a working public website, reusable launch kit, digital intake workflow, Airtable structure, and community survey handover.',
+        ],
+      },
+      {
+        title: 'Website Development',
+        body: [
+          'I designed and launched KuCoNa\'s responsive WordPress website using Elementor, supported by a reusable local HTML, CSS, and JavaScript launch kit.',
+          'The site was structured around three public programme hubs: Community Care, Learning Hub, and Nature Connect. Each hub carried dedicated programme, participation, and information pages rather than generic placeholder content.',
+        ],
+        bullets: [
+          'Built responsive navigation, centre information, participation routes, programme listings, stakeholder-approved copy, community photography, and public calls to action.',
+          'Created a 14-organisation partner directory with descriptions, logos, and external website links.',
+          'Tested layouts across desktop, reduced-width Safari, and mobile screens to resolve navigation, alignment, overflow, and image-positioning issues.',
+        ],
+      },
+      {
+        title: 'Connected Operations',
+        body: [
+          'The system boundary was deliberately simple: WordPress for public information, Jotform for structured intake, Make.com for webhook routing, Airtable as the operational source of truth, and Staff Home as the private coordinator-facing interface.',
+          'The youth-registration workflow was tested end to end, including the creation of an Airtable registration record and integration-log entry. Sensitive learner, guardian, attendance, and health information stayed outside WordPress.',
+        ],
+        bullets: [
+          'Configured and tested youth registration using Jotform, Make.com, and Airtable.',
+          'Added integration logging and duplicate-prevention support so staff could diagnose intake issues.',
+          'Created staff-facing Airtable pages for youth registrations, volunteer applications, and integration monitoring.',
+        ],
+      },
+      {
+        title: 'Airtable Development',
+        body: [
+          'I extended the Airtable system with website publishing fields, public-session helpers, attendance support, registration records, normalized contact fields, and interface pages for staff intake workflows.',
+          'I also safely removed 1,037 confirmed demonstration records while preserving the tables, fields, views, interfaces, and integrations that the live system depended on.',
+        ],
+      },
+      {
+        title: 'Community Survey',
+        body: [
+          'For KuCoNa\'s Covie work, I developed a mobile-friendly bilingual English/Afrikaans Google Form with six structured sections, 47 questions, consent-based branching, linked Google Sheets analytics, and collaborator access.',
+          'The survey included mobile-friendly rating scales and was tested from both respondent and administrator perspectives before handover.',
+        ],
+      },
+      {
+        title: 'Documentation and Handover',
+        body: [
+          'I produced implementation documentation, integration specifications, administrator checklists, PDF handover reports, publishing instructions, and an Airtable/Jotform staff training manual.',
+          'The documentation separated completed delivery from follow-up work so future staff could continue the system without treating draft areas as finished operations.',
+        ],
+      },
+      {
+        title: 'Results',
+        body: [
+          'The internship delivered the public foundation and a tested core registration pipeline while designing the larger system for safe future expansion.',
+        ],
+        bullets: [
+          'Live responsive KuCoNa public website with 15+ structured pages and three programme hubs.',
+          'Fourteen partner profiles with branding and verified links.',
+          'Tested automated youth-registration workflow with Airtable logging.',
+          'Airtable Staff Home intake and monitoring pages.',
+          '1,037 demonstration records safely removed.',
+          'Published bilingual community survey with linked analytics.',
+          'Technical and operational handover documentation for future staff.',
+        ],
+      },
+      {
+        title: 'Honest Boundary',
+        body: [
+          'Some items were intentionally scoped as the next implementation phase rather than represented as completed production work.',
+        ],
+        bullets: [
+          'Full Airtable Staff Home operational dashboard.',
+          'Air WP Sync automated session publishing.',
+          'Final volunteer and indemnity automation acceptance testing.',
+          'Public Google Calendar integration.',
+          'Website contact-form inbox configuration.',
+          'Monitoring dashboards, newsletters, and other Phase 2 services.',
+        ],
+      },
+    ],
+  },
   {
     slug: 'kasiswap-marketplace',
     title: 'KasiSwap Marketplace',
@@ -451,15 +634,43 @@ export const skills = [
   },
   {
     group: 'Frontend',
-    items: ['React', 'Next.js', 'Tailwind CSS', 'Responsive UI', 'Figma', 'Justinmind'],
+    items: [
+      'React',
+      'Next.js',
+      'Tailwind CSS',
+      'Responsive UI',
+      'WordPress',
+      'Elementor',
+      'Figma',
+      'Justinmind',
+    ],
   },
   {
     group: 'Backend and data',
-    items: ['Node.js', 'PHP/MySQL', 'PostgreSQL', 'Supabase', 'Clerk Auth', 'REST APIs'],
+    items: [
+      'Node.js',
+      'PHP/MySQL',
+      'PostgreSQL',
+      'Supabase',
+      'Airtable',
+      'Clerk Auth',
+      'REST APIs',
+    ],
   },
   {
     group: 'Cloud and workflow',
-    items: ['AWS EC2', 'AWS S3', 'AWS IAM', 'AWS Lambda', 'Git', 'Linux', 'Docker basics'],
+    items: [
+      'AWS EC2',
+      'AWS S3',
+      'AWS IAM',
+      'AWS Lambda',
+      'Jotform',
+      'Make.com',
+      'Google Apps Script',
+      'Git',
+      'Linux',
+      'Docker basics',
+    ],
   },
   {
     group: 'Teaching and leadership',
@@ -473,14 +684,25 @@ export const skills = [
       'Campus leadership',
     ],
   },
+  {
+    group: 'Digital operations',
+    items: [
+      'Webhook integrations',
+      'Data modeling',
+      'Duplicate-prevention workflows',
+      'POPIA-aware design',
+      'Staff training docs',
+      'Operational handover',
+    ],
+  },
 ]
 
 export const timeline: TimelineItem[] = [
   {
-    date: 'June 2026',
-    title: 'Nature\'s Valley Trust community IT support',
+    date: 'June 2026 - August 2026',
+    title: 'Digital Systems & Web Development Intern, NVT / KuCoNa',
     description:
-      'Supporting Gavin on KuCoNa IT installation and coordinating a planned meeting with 10 youth ambassadors by connecting with Andrew.',
+      'Designed and launched KuCoNa\'s WordPress/Elementor public website, connected Jotform/Make.com/Airtable intake workflows, expanded Staff Home operations support, and built a bilingual 47-question community survey.',
   },
   {
     date: 'May 2026 - Present',
