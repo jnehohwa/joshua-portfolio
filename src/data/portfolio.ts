@@ -58,6 +58,8 @@ export type TimelineItem = {
   description: string
 }
 
+const cvDownloadHref = '/Joshua_Nehohwa_CV.pdf?v=2026-08-18-kucona'
+
 export const profile = {
   name: 'Joshua Nehohwa',
   initials: 'JN',
@@ -71,7 +73,7 @@ export const profile = {
     email: 'mailto:nehohwajoshua@gmail.com',
     github: 'https://github.com/jnehohwa',
     linkedin: 'https://www.linkedin.com/in/joshua-nehohwa-b4b97b229/',
-    cv: '/Joshua_Nehohwa_CV.pdf',
+    cv: cvDownloadHref,
   },
 }
 
@@ -267,7 +269,7 @@ export const caseStudies: CaseStudy[] = [
     ],
     links: [
       { label: 'Live site', href: 'https://kucona.org.za/', external: true },
-      { label: 'CV', href: '/Joshua_Nehohwa_CV.pdf' },
+      { label: 'CV', href: cvDownloadHref },
     ],
     heroImage: {
       src: '/case-studies/kucona/kucona-home-mural.jpg',
@@ -405,7 +407,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         label: 'CV',
-        href: '/Joshua_Nehohwa_CV.pdf',
+        href: cvDownloadHref,
       },
     ],
     heroImage: {
@@ -491,7 +493,7 @@ export const caseStudies: CaseStudy[] = [
       { label: 'Focus', value: 'Ideas and feedback' },
       { label: 'Year', value: '2025' },
     ],
-    links: [{ label: 'CV', href: '/Joshua_Nehohwa_CV.pdf' }],
+    links: [{ label: 'CV', href: cvDownloadHref }],
     sections: [
       {
         title: 'Problem',
@@ -542,7 +544,7 @@ export const caseStudies: CaseStudy[] = [
       { label: 'Auth', value: 'Clerk' },
       { label: 'Data layer', value: 'Supabase' },
     ],
-    links: [{ label: 'CV', href: '/Joshua_Nehohwa_CV.pdf' }],
+    links: [{ label: 'CV', href: cvDownloadHref }],
     sections: [
       {
         title: 'Problem',
