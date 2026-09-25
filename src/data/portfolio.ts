@@ -58,7 +58,7 @@ export type TimelineItem = {
   description: string
 }
 
-const cvDownloadHref = '/Joshua_Nehohwa_CV.pdf?v=2026-08-18-kucona'
+const cvDownloadHref = '/Joshua_Nehohwa_CV.pdf?v=2026-09-25-new-cv'
 
 export const profile = {
   name: 'Joshua Nehohwa',
