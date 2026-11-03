@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/work", "destination": "/" },
+    { "source": "/about", "destination": "/" },
+    { "source": "/experience", "destination": "/" },
     {
       "source": "/case-studies/(.*)",
       "destination": "/"
