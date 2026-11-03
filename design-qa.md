@@ -18,6 +18,7 @@
 - Cursor aura follows pointer and is disabled for touch/coarse pointers.
 - Mobile menu opens as a full-screen overlay and prevents page scrolling.
 - Project links preserve the existing case-study routes.
+- Work, About, and Experience are distinct routes with an animated transition; desktop and mobile navigation checked.
 - CV, GitHub, LinkedIn, email, and image assets resolve correctly.
 - Reduced-motion users receive shortened or disabled motion.
 

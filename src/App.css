@@ -273,6 +273,121 @@
   padding: clamp(6rem, 10vw, 10rem) clamp(1.25rem, 3.4vw, 4rem);
 }
 
+.page-intro {
+  display: grid;
+  gap: 1.8rem;
+  width: min(100%, 100rem);
+  min-height: 38rem;
+  align-content: center;
+  padding: 10rem clamp(1.25rem, 3.4vw, 4rem) 5rem;
+  margin-inline: auto;
+}
+
+.page-intro > p {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.page-intro h1,
+.about-story h2 {
+  max-width: 74rem;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(4rem, 7vw, 7.5rem);
+  font-weight: 300;
+  line-height: 0.97;
+}
+
+.page-intro > span {
+  max-width: 43rem;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  line-height: 1.6;
+}
+
+.project-directory {
+  padding-top: 3rem;
+}
+
+.project-directory > a {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.3fr) 1fr auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.project-directory > a:hover,
+.project-directory > a:focus-visible {
+  color: var(--accent);
+}
+
+.project-directory > a span {
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+
+.project-directory > a strong {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: 300;
+}
+
+.about-story {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: clamp(3rem, 8vw, 9rem);
+  align-items: start;
+  padding-top: 2rem;
+}
+
+.about-story img {
+  width: 100%;
+  max-height: 48rem;
+  object-fit: cover;
+  object-position: 50% 72%;
+}
+
+.about-story > div {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.about-story h2 {
+  margin-top: 2rem;
+  font-size: clamp(2.8rem, 4vw, 4.6rem);
+}
+
+.about-story h2:first-child {
+  margin-top: 0;
+}
+
+.about-story p,
+.experience-detail p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.experience-detail {
+  padding-top: 2rem;
+}
+
+.experience-detail .experience-list article {
+  align-items: start;
+}
+
+.experience-detail h2 {
+  margin: 0 0 0.8rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 2.4vw, 2.7rem);
+  font-weight: 300;
+}
+
 .section-title {
   display: grid;
   gap: 1.4rem;
@@ -737,6 +852,13 @@
 }
 
 @media (max-width: 900px) {
+  .about-story {
+    grid-template-columns: 1fr;
+  }
+
+  .about-story img {
+    max-height: 38rem;
+  }
   .desktop-nav,
   .site-identity small {
     display: none;
@@ -852,6 +974,22 @@
 }
 
 @media (max-width: 640px) {
+  .page-intro {
+    min-height: 32rem;
+    padding-top: 9rem;
+  }
+
+  .page-intro h1 {
+    font-size: clamp(3.3rem, 13vw, 5rem);
+  }
+
+  .project-directory > a {
+    grid-template-columns: 1fr auto;
+  }
+
+  .project-directory > a span {
+    grid-column: 1 / -1;
+  }
   .site-header {
     min-height: 5rem;
     padding-block: 1rem;

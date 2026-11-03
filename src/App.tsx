@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ArrowLeft from 'lucide-react/dist/esm/icons/arrow-left.mjs'
 import ArrowUpRight from 'lucide-react/dist/esm/icons/arrow-up-right.mjs'
@@ -81,7 +81,18 @@ function App() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [caseStudySlug])
+  }, [pathname])
+
+  const navigate = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const url = new URL(event.currentTarget.href)
+    if (url.origin !== window.location.origin) return
+    event.preventDefault()
+    if (url.pathname !== pathname) {
+      window.history.pushState({}, '', url.pathname)
+      setPathname(url.pathname)
+    }
+  }
 
   return (
     <div className="site-shell">
@@ -89,18 +100,26 @@ function App() {
       <AnimatePresence>
         {isLoading ? <IntroLoader key="intro-loader" /> : null}
       </AnimatePresence>
-      <SiteHeader />
-      <main>
+      <SiteHeader navigate={navigate} />
+      <AnimatePresence mode="wait">
+      <motion.main key={pathname} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -18 }} transition={{ duration: 0.36, ease: 'easeInOut' }}>
         {caseStudySlug ? (
           activeCaseStudy ? (
             <CaseStudyPage caseStudy={activeCaseStudy} />
           ) : (
             <CaseStudyNotFound />
           )
+        ) : pathname === '/work' ? (
+          <WorkPage />
+        ) : pathname === '/about' ? (
+          <AboutPage />
+        ) : pathname === '/experience' ? (
+          <ExperiencePage />
         ) : (
           <HomePage />
         )}
-      </main>
+      </motion.main>
+      </AnimatePresence>
     </div>
   )
 }
@@ -130,7 +149,7 @@ function IntroLoader() {
   )
 }
 
-function SiteHeader() {
+function SiteHeader({ navigate }: { navigate: (event: MouseEvent<HTMLAnchorElement>) => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -142,15 +161,15 @@ function SiteHeader() {
 
   return (
     <header className="site-header">
-      <a className="site-identity" href="/" onClick={closeMenu}>
+      <a className="site-identity" href="/" onClick={(event) => { closeMenu(); navigate(event) }}>
         <span>{profile.name}</span>
         <small>Software developer</small>
       </a>
 
       <nav className="desktop-nav" aria-label="Primary navigation">
-        <a href="/#work">Work</a>
-        <a href="/#about">About</a>
-        <a href="/#experience">Experience</a>
+        <a href="/work" onClick={navigate}>Work</a>
+        <a href="/about" onClick={navigate}>About</a>
+        <a href="/experience" onClick={navigate}>Experience</a>
         <a className="nav-outline" href={profile.links.cv} target="_blank" rel="noreferrer">
           CV
         </a>
@@ -178,9 +197,9 @@ function SiteHeader() {
             transition={{ duration: 0.22 }}
           >
             <nav aria-label="Mobile navigation">
-              <a href="/#work" onClick={closeMenu}>Work</a>
-              <a href="/#about" onClick={closeMenu}>About</a>
-              <a href="/#experience" onClick={closeMenu}>Experience</a>
+              <a href="/work" onClick={(event) => { closeMenu(); navigate(event) }}>Work</a>
+              <a href="/about" onClick={(event) => { closeMenu(); navigate(event) }}>About</a>
+              <a href="/experience" onClick={(event) => { closeMenu(); navigate(event) }}>Experience</a>
             </nav>
             <div className="mobile-actions">
               <a className="nav-primary" href={profile.links.email}>Get in touch</a>
@@ -200,8 +219,76 @@ function HomePage() {
     <>
       <Hero />
       <SelectedWork />
+      <Contact />
+    </>
+  )
+}
+
+function PageIntro({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
+  return (
+    <section className="page-intro">
+      <p>{eyebrow}</p>
+      <h1>{title}</h1>
+      <span>{description}</span>
+    </section>
+  )
+}
+
+function WorkPage() {
+  return (
+    <>
+      <PageIntro eyebrow="Work" title="Things I've built." description="Software projects, digital systems, and practical tools across community work and study." />
+      <SelectedWork />
+      <section className="content-section project-directory">
+        <SectionTitle eyebrow="More projects" title="The work keeps growing." />
+        {projects.slice(2).map((project) => (
+          <a key={project.title} href={project.links.caseStudy ?? project.links.live ?? project.links.source ?? profile.links.github}>
+            <span>{project.timeline}</span>
+            <strong>{project.title}</strong>
+            <ArrowUpRight size={19} aria-hidden="true" />
+          </a>
+        ))}
+      </section>
+      <Contact />
+    </>
+  )
+}
+
+function AboutPage() {
+  return (
+    <>
+      <PageIntro eyebrow="About" title="Curious about how things work. Focused on making them work better." description="I'm Joshua Nehohwa, a software engineering student and developer based in Cape Town." />
+      <section className="content-section about-story">
+        <img src="/joshua-cape-town.jpg" alt="Joshua Nehohwa in Cape Town" />
+        <div>
+          <h2>Building with purpose</h2>
+          <p>I study software engineering and learn best by building things people can actually use. My work spans web applications, data workflows, and the quieter operational details that help a system hold together after launch.</p>
+          <p>At Nature's Valley Trust and KuCoNa, I worked across a public website, registration pathways, and staff-facing data processes. That experience made the connection between code and the people using it very real to me.</p>
+          <h2>Learning out loud</h2>
+          <p>Alongside development, I tutor ITMTA1-B22 at Eduvos and chair Vossie DevClub. Teaching has sharpened how I explain technical ideas, listen to questions, and work with a team. I like making complex systems clearer, whether I'm writing code or helping someone understand it.</p>
+          <p>I'm interested in full-stack engineering, security, cloud systems, and responsible uses of AI. I bring curiosity to unfamiliar problems and care about the practical details that make software dependable.</p>
+        </div>
+      </section>
       <Capabilities />
-      <Experience />
+      <Contact />
+    </>
+  )
+}
+
+function ExperiencePage() {
+  return (
+    <>
+      <PageIntro eyebrow="Experience" title="Learning by building and leading." description="A path through software engineering, community systems, tutoring, and hands-on project delivery." />
+      <section className="content-section experience-section experience-detail">
+        <div className="experience-list">
+          {timeline.map((item) => (
+            <article key={`${item.date}-${item.title}`}>
+              <time>{item.date}</time>
+              <div><h2>{item.title}</h2><p>{item.description}</p></div>
+            </article>
+          ))}
+        </div>
+      </section>
       <Contact />
     </>
   )
@@ -349,29 +436,6 @@ function Capabilities() {
   )
 }
 
-function Experience() {
-  return (
-    <section className="content-section experience-section" id="experience">
-      <SectionTitle eyebrow="Experience" title="Learning by building and leading." />
-      <div className="experience-list">
-        {timeline.slice(0, 5).map((item, index) => (
-          <motion.article
-            key={`${item.date}-${item.title}`}
-            variants={reveal}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.55 }}
-            transition={{ duration: 0.5, delay: index * 0.04 }}
-          >
-            <time>{item.date}</time>
-            <h3>{item.title}</h3>
-          </motion.article>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 function Contact() {
   return (
     <section className="contact-section" id="contact">
@@ -422,7 +486,7 @@ function CaseStudyPage({ caseStudy }: { caseStudy: CaseStudy }) {
     <div className="case-page">
       <section className="case-hero">
         <div>
-          <a className="back-link" href="/#work">
+          <a className="back-link" href="/work">
             <ArrowLeft size={16} /> Back to work
           </a>
           <p className="case-kicker">{caseStudy.type}</p>
