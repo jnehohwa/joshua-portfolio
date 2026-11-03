@@ -1,0 +1,10 @@
+# Joshua Nehohwa Portfolio
+
+Portfolio for Joshua Nehohwa, a Cape Town-based junior software developer building practical full-stack products and systems.
+
+## Main pages
+
+- [Portfolio](https://joshuanehohwa.vercel.app/)
+- [GitHub](https://github.com/jnehohwa)
+- [LinkedIn](https://www.linkedin.com/in/joshua-nehohwa-b4b97b229/)
+- [CV](https://joshuanehohwa.vercel.app/Joshua_Nehohwa_CV.pdf)
