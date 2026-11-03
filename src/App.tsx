@@ -265,7 +265,7 @@ function AboutPage() {
           <p>I study software engineering and learn best by building things people can actually use. My work spans web applications, data workflows, and the quieter operational details that help a system hold together after launch.</p>
           <p>At Nature's Valley Trust and KuCoNa, I worked across a public website, registration pathways, and staff-facing data processes. That experience made the connection between code and the people using it very real to me.</p>
           <h2>Learning out loud</h2>
-          <p>Alongside development, I tutor ITMTA1-B22 at Eduvos and chair Vossie DevClub. Teaching has sharpened how I explain technical ideas, listen to questions, and work with a team. I like making complex systems clearer, whether I'm writing code or helping someone understand it.</p>
+          <p>I was selected to run an ITMTA1-B22 tutoring pilot at Eduvos from August to September 2026, and served as Vossie DevClub chair from July 2025 to July 2026. Those experiences sharpened how I explain technical ideas, listen to questions, and work with a team. I like making complex systems clearer, whether I'm writing code or helping someone understand it.</p>
           <p>I'm interested in full-stack engineering, security, cloud systems, and responsible uses of AI. I bring curiosity to unfamiliar problems and care about the practical details that make software dependable.</p>
         </div>
       </section>

@@ -63,7 +63,7 @@ const cvDownloadHref = '/Joshua_Nehohwa_CV.pdf?v=2026-09-25-new-cv'
 export const profile = {
   name: 'Joshua Nehohwa',
   initials: 'JN',
-  role: 'Software Engineering Student | Junior Software Developer | Eduvos Tutor',
+  role: 'Software Engineering Student | Junior Software Developer',
   location: 'Cape Town, South Africa / GMT+2',
   headline: 'I build practical software systems and help students understand them.',
   summary:
@@ -86,10 +86,10 @@ export const navItems = [
 
 export const metrics = [
   { label: 'Academic average', value: '86%' },
-  { label: 'Current tutoring', value: 'ITMTA1-B22' },
+  { label: 'Tutoring pilot', value: 'ITMTA1-B22, Aug-Sep 2026' },
   { label: 'Recent internship', value: 'NVT / KuCoNa' },
   { label: 'KuCoNa delivery', value: '15+ pages + 47-question survey' },
-  { label: 'Leadership', value: 'Vossie DevClub Chair' },
+  { label: 'Leadership', value: 'Former Vossie DevClub Chair' },
   { label: 'GitHub', value: '9 public repos' },
 ]
 
@@ -112,7 +112,7 @@ export const focusAreas = [
   {
     title: 'Teaching and student support',
     description:
-      'Currently leading Eduvos ITMTA1-B22 tutorial sessions, with scheduled two-hour Teams availability and live support for exam-related questions.',
+      'Selected to run the Eduvos ITMTA1-B22 tutoring pilot from August to September 2026, supporting students with technical concepts and structured problem solving.',
   },
   {
     title: 'Cloud and security foundations',
@@ -709,16 +709,16 @@ export const timeline: TimelineItem[] = [
       'Designed and launched KuCoNa\'s WordPress/Elementor public website, connected Jotform/Make.com/Airtable intake workflows, expanded Staff Home operations support, and built a bilingual 47-question community survey.',
   },
   {
-    date: 'May 2026 - Present',
-    title: 'ITMTA1-B22 Tutor, Eduvos',
+    date: 'August 2026 - September 2026',
+    title: 'ITMTA1-B22 Tutoring Pilot, Eduvos',
     description:
-      'Lead weekly two-hour Teams tutorial sessions for ITMTA1-B22 students, including the June 19, 2026 scheduled session and live support for exam-related questions.',
+      'Selected to run a two-month tutoring pilot for ITMTA1-B22, helping students work through technical concepts and questions.',
   },
   {
-    date: '2025 - Present',
-    title: 'Chairperson, Vossie DevClub',
+    date: 'July 2025 - July 2026',
+    title: 'Former Chairperson, Vossie DevClub',
     description:
-      'Lead technical workshops, school outreach, student developer programs, hackathons, mentorship initiatives, and campus innovation events.',
+      'Led technical workshops, school outreach, student developer programs, hackathons, mentorship initiatives, and campus innovation events.',
   },
   {
     date: '2023 - 2026',
